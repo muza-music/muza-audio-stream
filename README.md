@@ -65,7 +65,7 @@ Authorization: Bearer <token>
 
 #### Stream Audio
 
-To stream audio, send a POST request to /audio with the following query parameters:
+To stream audio, send a GET request to /audio with the following query parameters:
 
   -  filename: Full path to the audio file you wish to stream.
   -  bitrate: Desired audio bitrate (e.g., 128k).
