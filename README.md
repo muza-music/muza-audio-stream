@@ -53,14 +53,38 @@ go build -o server cmd/server/main.go
 ./server
 ```
 
-Browse to https://localhost:8443 for the GAS HTML player.
+Browse to https://localhost:8443 for the demo GAS HTML audio player.
 
 #### Usage
 
-    Authentication: Generate a JWT for the Authorization header as Bearer <token>.
-    Stream Audio: Send requests to /stream with query parameters:
-        filenameId: Name of the audio file (without path).
-        quality: Audio quality (low, medium, high).
+#### Authentication
+
+To authenticate, generate a JWT for the Authorization header in the following format:
+
+Authorization: Bearer <token>
+
+#### Stream Audio
+
+To stream audio, send a POST request to /audio with the following query parameters:
+
+  -  filename: Full path to the audio file you wish to stream.
+  -  bitrate: Desired audio bitrate (e.g., 128k).
+  -  samplerate: Sample rate of the audio (e.g., 44100).
+  -  channels: Number of audio channels (e.g., 2 for stereo).
+  -  codec: Audio codec to use (e.g., mp3, aac).
+  -  quality: Quality settings for the audio stream (e.g., 4).
+
+#### Example curl Command
+
+```bash
+curl -k "https://localhost:8443/audio?filename=audio_files/song.mp3&bitrate=256k&samplerate=48000&channels=2&codec=mp3&quality=4" \
+     -H "Authorization: Bearer YOUR_BEARER_TOKEN_HERE"
+```
+
+#### Notes
+
+  -  Use -k if you need to bypass SSL certificate validation for local testing (https).
+  -  Replace YOUR_BEARER_TOKEN_HERE with your generated JWT.
 
 Place audio files in audio_files/, and the server will dynamically transcode and stream them.
 
@@ -78,7 +102,9 @@ go build -o jwtgen cmd/jwtgen/main.go
 ./jwtgen -username="your_username"
 ```
 
-    -username: Username to include in the token (required).
+  -  -username: Username to include in the token (required).
+  -  -phone: Phone number.
+  -  -expiresIn: Number of days until expiration (default: 30)
 
 #### Example:
 
