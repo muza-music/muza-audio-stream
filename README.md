@@ -78,7 +78,7 @@ To stream audio, send a POST request to /audio with the following query paramete
 
 ```bash
 curl -k "https://localhost:8443/audio?filename=audio_files/song.mp3&bitrate=256k&samplerate=48000&channels=2&codec=mp3&quality=4" \
-     -H "Authorization: Bearer YOUR_BEARER_TOKEN_HERE"
+     -H "Authorization: Bearer YOUR_BEARER_TOKEN_HERE" | ffplay -i -
 ```
 
 #### Notes
