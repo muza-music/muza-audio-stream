@@ -7,7 +7,7 @@
         body { font-family: Arial, sans-serif; }
         .container { max-width: 600px; margin: 0 auto; padding: 20px; }
         label { display: block; margin-top: 10px; }
-        input[type="text"], input[type="file"] { width: 100%; padding: 8px; }
+        input[type="text"], select { width: 100%; padding: 8px; }
         button { margin-top: 10px; padding: 10px 15px; }
         #controls { margin-top: 20px; }
         #status { margin-top: 20px; color: red; }
@@ -17,14 +17,56 @@
 <body>
     <div class="container">
         <h1>Audio Player with JWT Authentication</h1>
+        
         <label for="token">JWT Token:</label>
         <input type="text" id="token" placeholder="Enter your JWT token">
 
         <label for="filename">Filename:</label>
         <input type="text" id="filename" placeholder="Enter the path to the audio file">
 
+        <label for="codec">Codec:</label>
+        <select id="codec">
+            <option value="mp3">MP3</option>
+            <option value="aac">AAC</option>
+            <option value="flac">FLAC</option>
+            <option value="opus">Opus</option>
+            <option value="vorbis">Vorbis</option>
+        </select>
+
+        <label for="bitrate">Bitrate:</label>
+        <select id="bitrate">
+            <option value="128k">128 kbps</option>
+            <option value="192k">192 kbps</option>
+            <option value="256k">256 kbps</option>
+            <option value="320k">320 kbps</option>
+        </select>
+
+        <label for="samplerate">Sample Rate:</label>
+        <select id="samplerate">
+            <option value="44100">44.1 kHz</option>
+            <option value="48000">48 kHz</option>
+            <option value="96000">96 kHz</option>
+        </select>
+
+        <label for="channels">Channels:</label>
+        <select id="channels">
+            <option value="1">Mono</option>
+            <option value="2">Stereo</option>
+        </select>
+
         <label for="quality">Quality (0-9):</label>
-        <input type="text" id="quality" placeholder="Enter the quality parameter (e.g., 2)">
+        <select id="quality">
+            <option value="0">0 (Highest)</option>
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="4">4</option>
+            <option value="5">5 (Medium)</option>
+            <option value="6">6</option>
+            <option value="7">7</option>
+            <option value="8">8</option>
+            <option value="9">9 (Lowest)</option>
+        </select>
 
         <button id="loadButton">Load Audio</button>
 
@@ -48,14 +90,18 @@
         document.getElementById('loadButton').addEventListener('click', function () {
             const token = document.getElementById('token').value;
             const filename = document.getElementById('filename').value;
+            const codec = document.getElementById('codec').value;
+            const bitrate = document.getElementById('bitrate').value;
+            const samplerate = document.getElementById('samplerate').value;
+            const channels = document.getElementById('channels').value;
             const quality = document.getElementById('quality').value;
 
-            if (!token || !filename || !quality) {
-                alert('Please fill in all fields.');
+            if (!token || !filename) {
+                alert('Please fill in all required fields.');
                 return;
             }
 
-            const url = `/audio?filename=${encodeURIComponent(filename)}&quality=${encodeURIComponent(quality)}`;
+            const url = `/audio?filename=${encodeURIComponent(filename)}&codec=${encodeURIComponent(codec)}&bitrate=${encodeURIComponent(bitrate)}&samplerate=${encodeURIComponent(samplerate)}&channels=${encodeURIComponent(channels)}&quality=${encodeURIComponent(quality)}`;
 
             fetch(url, {
                 method: 'GET',
