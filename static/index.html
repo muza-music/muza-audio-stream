@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Audio Player with JWT Authentication</title>
+    <style>
+        body { font-family: Arial, sans-serif; }
+        .container { max-width: 600px; margin: 0 auto; padding: 20px; }
+        label { display: block; margin-top: 10px; }
+        input[type="text"], input[type="file"] { width: 100%; padding: 8px; }
+        button { margin-top: 10px; padding: 10px 15px; }
+        #controls { margin-top: 20px; }
+        #status { margin-top: 20px; color: red; }
+        #playingIndicator { margin-top: 10px; color: green; display: none; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Audio Player with JWT Authentication</h1>
+        <label for="token">JWT Token:</label>
+        <input type="text" id="token" placeholder="Enter your JWT token">
+
+        <label for="filename">Filename:</label>
+        <input type="text" id="filename" placeholder="Enter the path to the audio file">
+
+        <label for="quality">Quality (0-9):</label>
+        <input type="text" id="quality" placeholder="Enter the quality parameter (e.g., 2)">
+
+        <button id="loadButton">Load Audio</button>
+
+        <div id="controls" style="display: none;">
+            <button id="playButton">Play</button>
+            <button id="pauseButton">Pause</button>
+            <button id="stopButton">Stop</button>
+            <div id="playingIndicator">Playing...</div>
+        </div>
+
+        <div id="status"></div>
+
+        <audio id="audioPlayer"></audio>
+    </div>
+
+    <script>
+        let audioPlayer = document.getElementById('audioPlayer');
+        let playingIndicator = document.getElementById('playingIndicator');
+        let isAudioLoaded = false;
+
+        document.getElementById('loadButton').addEventListener('click', function () {
+            const token = document.getElementById('token').value;
+            const filename = document.getElementById('filename').value;
+            const quality = document.getElementById('quality').value;
+
+            if (!token || !filename || !quality) {
+                alert('Please fill in all fields.');
+                return;
+            }
+
+            const url = `/audio?filename=${encodeURIComponent(filename)}&quality=${encodeURIComponent(quality)}`;
+
+            fetch(url, {
+                method: 'GET',
+                headers: {
+                    'Authorization': 'Bearer ' + token
+                }
+            })
+            .then(response => {
+                if (!response.ok) {
+                    response.text().then(text => {
+                        document.getElementById('status').innerText = 'Error: ' + text;
+                    });
+                    throw new Error('Network response was not ok');
+                }
+                return response.blob();
+            })
+            .then(blob => {
+                const objectUrl = URL.createObjectURL(blob);
+                audioPlayer.src = objectUrl;
+                isAudioLoaded = true;
+                document.getElementById('controls').style.display = 'block';
+                document.getElementById('status').innerText = '';
+            })
+            .catch(error => {
+                console.error('There has been a problem with your fetch operation:', error);
+            });
+        });
+
+        document.getElementById('playButton').addEventListener('click', function () {
+            if (isAudioLoaded) {
+                audioPlayer.play();
+            } else {
+                alert('No audio loaded. Please load an audio file first.');
+            }
+        });
+
+        document.getElementById('pauseButton').addEventListener('click', function () {
+            if (isAudioLoaded) {
+                audioPlayer.pause();
+            }
+        });
+
+        document.getElementById('stopButton').addEventListener('click', function () {
+            if (isAudioLoaded) {
+                audioPlayer.pause();
+                audioPlayer.currentTime = 0;
+                playingIndicator.style.display = 'none';
+            }
+        });
+
+        audioPlayer.addEventListener('play', function () {
+            playingIndicator.style.display = 'block';
+        });
+
+        audioPlayer.addEventListener('pause', function () {
+            playingIndicator.style.display = 'none';
+        });
+
+        audioPlayer.addEventListener('ended', function () {
+            playingIndicator.style.display = 'none';
+        });
+    </script>
+</body>
+</html>
