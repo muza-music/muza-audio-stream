@@ -31,7 +31,7 @@ FROM quay.io/fedora/fedora:latest
 RUN dnf config-manager setopt fedora-cisco-openh264.enabled=1 \
     && dnf install -y https://mirrors.rpmfusion.org/free/fedora/rpmfusion-free-release-$(rpm -E %fedora).noarch.rpm https://mirrors.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-$(rpm -E %fedora).noarch.rpm
 
-RUN sudo dnf swap ffmpeg-freex ffmpeg --allowerasing \
+RUN sudo dnf swap -y ffmpeg-freex ffmpeg --allowerasing \
     && dnf clean all
 
 # Set the working directory inside the container
