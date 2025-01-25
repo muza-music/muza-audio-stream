@@ -1,6 +1,6 @@
 # Audio Streaming Server with JWT Authentication
 
-General Audio Server (GAS) provides an audio streaming server using FFmpeg, with JWT-based authentication and support for dynamic audio quality.
+General Audio Stream provides an audio streaming server using FFmpeg, with JWT-based authentication and support for dynamic audio quality.
 
 ## Features
 - Supports multiple audio formats (e.g., MP3, WAV, AAC) with FFmpeg transcoding.
